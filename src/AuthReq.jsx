@@ -8,15 +8,30 @@ export const AuthReq = () => {
     useEffect(() => {
         const fetchData = async () => {
             const token = localStorage.getItem('token');
+            if(!token) {
+                setMessage('No token found, please log in');
+                return;
+            }
+
             try {
                 const res = await axios.get('/user/protected-route', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
+                setMessage('Token set')
                 setData(res.data);
-            } catch (error) {
-                setMessage(`Failed to fetch data: ${error.res.data.message}`)
+            }  catch (error) {
+                if (error.response) {
+                    // Server responded with a status other than 200 range
+                    setMessage(`Failed to fetch data: ${error.response.data.message}`);
+                } else if (error.request) {
+                    // Request was made but no response received
+                    setMessage('Failed to fetch data: No response from server');
+                } else {
+                    // Something else caused the error
+                    setMessage(`Error: ${error.message}`);
+                }
             }
         }
 
@@ -24,6 +39,7 @@ export const AuthReq = () => {
     }, []);
     return (
         <div>
+            <h2>AuthReq</h2>
         {data ? (
             <div>{JSON.stringify(data)}</div>
         ) : (

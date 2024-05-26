@@ -4,6 +4,7 @@ import { Register } from './Register'
 import { AuthReq } from './AuthReq'
 
 import './App.css'
+import axios from 'axios'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -13,36 +14,49 @@ function App() {
     handleUser();
   }, []);
 
-  const handleUser = () => {
+  const handleUser = async () => {
     //check jwt for user data if so set user
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setUser(decoded);
-        setMessage('Valid token')
+        setMessage('Valid token');
       } catch (error) {
         setMessage(`Invalid token ${error}`)
+      }
+    } else {
+      try {
+        const res = await axios.get('/home', {
+          headers: { Authorization: `Bearer ${token}`},
+        });
+        if (res.status === 200 && res.data.user) {
+          setUser(res.data.user);
+          setMessage('User set');
+        }
+      } catch (error) {
+        setMessage(`Error fetching home: ${error}`)
       }
     }
   }
 
   return (
     <div>
-      <AuthReq />
-      {user ? <div>
-        <h1>Hello {user.username}</h1>
-        <Logout handleUser={handleUser} />
-      </div> 
+      {user ?( <div>
+          <h1>Hello {user.username}</h1>
+          <Logout handleUser={handleUser} />
+          {/* Include other protected components like AuthReq */}
+          <AuthReq />
+        </div>)
       : 
-      <div>
+     ( <div>
         <h1>Hello</h1>
         <h3>Please Login</h3>
         <Login handleUser={handleUser} />
         <hr />
         <h4>Or Create a new account</h4>
         <Register />
-      </div>}
+      </div>)}
       <p>{message}</p>
     </div>
   )
