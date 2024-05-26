@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import config from './config';
 
 export const Login = ({ handleUser }) => {
     const [username, setUsername] = useState('');
@@ -9,7 +10,7 @@ export const Login = ({ handleUser }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('/login', { username, password });
+            const res = await axios.post(`${config.apiBaseUrl}/login`, { username, password });
             localStorage.setItem('token', res.data.token);
             handleUser();
             setMessage('Login successful')
@@ -40,10 +41,17 @@ export const Login = ({ handleUser }) => {
 };
 
 export const Logout = ({ handleUser }) => {
+    const [message, setMessage] = useState('');
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         handleUser();
         setMessage('Logout successful')
     };
-    return <button onClick={handleLogout}>Logout</button>
+    return (
+    <div>
+        <button onClick={handleLogout}>Logout</button>
+        <p>{message}</p>
+    </div>
+    )
 };

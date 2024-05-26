@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import config from "./config";
 
 export const AuthReq = () => {
     const [data, setData] = useState(null);
@@ -13,8 +15,12 @@ export const AuthReq = () => {
                 return;
             }
 
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.id;
+
             try {
-                const res = await axios.get('/user/protected-route', {
+                
+                const res = await axios.get(`${config.apiBaseUrl}/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

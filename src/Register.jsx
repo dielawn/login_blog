@@ -1,14 +1,16 @@
 import React, {useState} from "react";
+import axios from "axios";
+import config from "./config";
 
 export const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('Starting Message');
 
-    const handleRegistration = async () => {
+    const handleRegistration = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('/register', { username, password, admin: false });
+            const res = await axios.post(`${config.apiBaseUrl}/register`, { username, password, admin: false });
             if (res.status === 201) {
                 setMessage('Registration successful')
             }
@@ -16,8 +18,13 @@ export const Register = () => {
                 setMessage('Username already exists')
             }
             
-        } catch (error) {
-            setMessage(`Registration Failed: ${error.res.data.message}`);
+        }  catch (error) {
+            console.log('Error:', error);
+            if (error.response) {
+                setMessage(`Registration Failed: ${error.response.data.message}`);
+            } else {
+                setMessage('Registration Failed: An unexpected error occurred.');
+            }
         }
         
     }

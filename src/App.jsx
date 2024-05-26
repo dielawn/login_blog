@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Login, Logout } from './Login'
 import { Register } from './Register'
 import { AuthReq } from './AuthReq'
+import { jwtDecode } from "jwt-decode";
 
 import './App.css'
 import axios from 'axios'
