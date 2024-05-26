@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 
-export const Login = () => {
+export const Login = ({ handleUser }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -11,6 +11,7 @@ export const Login = () => {
         try {
             const res = await axios.post('/login', { username, password });
             localStorage.setItem('token', res.data.token);
+            handleUser();
             setMessage('Login successful')
         } catch (error) {
             setMessage(`Login Failed: ${error.res.data.message}`);
@@ -38,10 +39,11 @@ export const Login = () => {
     );
 };
 
-export const Logout = () => {
+export const Logout = ({ handleUser }) => {
     const handleLogout = () => {
         localStorage.removeItem('token');
-        // redirect to '/'
+        handleUser();
+        setMessage('Logout successful')
     };
     return <button onClick={handleLogout}>Logout</button>
 };
