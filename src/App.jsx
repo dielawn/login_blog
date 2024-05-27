@@ -3,7 +3,6 @@ import { Login, Logout } from './Login'
 import { Register } from './Register'
 import { AuthReq } from './AuthReq'
 import { jwtDecode } from "jwt-decode";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css'
 import axios from 'axios'
@@ -11,6 +10,10 @@ import axios from 'axios'
 function App() {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState('')
+
+  const updateUser = (updatedUser) => {
+    setUser({ user: updatedUser });
+};
 
   useEffect(() => {
     handleUser();
@@ -52,7 +55,7 @@ function App() {
           <h1>Hello {user.username}</h1>
           <Logout handleUser={handleUser}  />
           {/* Include other protected components like AuthReq */}
-          <AuthReq />
+          <AuthReq updateUser={updateUser}/>
         </div>)
       : 
      ( <div>

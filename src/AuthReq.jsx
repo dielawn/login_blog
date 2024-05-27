@@ -3,13 +3,16 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import config from "./config";
 import { convertUnixTime, getHrMin } from "../utils";
+import { Blog } from './Blog';
+import { NewPost } from "./NewPost";
 
-export const AuthReq = () => {
+export const AuthReq = ({ updateUser }) => {
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
     const [iat, setIat] = useState(null)
     const [expTime, setExpTime] = useState(null)
 
+    
     useEffect(() => {
         if (data && data.user) {
             setExpTime(getHrMin(data.user.exp))
@@ -65,7 +68,13 @@ export const AuthReq = () => {
                 <p>ID: {data.user.id}</p>
                 <p>Session initiated: {iat}</p>
                 <p>User will be logged out at: {expTime}</p>
+                {data.user.posts && <Blog data={data}/>}
+                <div>
+                   <NewPost updateUser={updateUser} data={data}/>
+                </div>
             </div>
+
+           
         ) : (
             <p>{message}</p>
         )}
