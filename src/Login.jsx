@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import config from './config';
 
+
 export const Login = ({ handleUser }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -47,6 +48,7 @@ export const Logout = ({ handleUser }) => {
         localStorage.removeItem('token');
         handleUser();
         setMessage('Logout successful')
+        
     };
     return (
     <div>

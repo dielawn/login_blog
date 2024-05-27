@@ -3,6 +3,7 @@ import { Login, Logout } from './Login'
 import { Register } from './Register'
 import { AuthReq } from './AuthReq'
 import { jwtDecode } from "jwt-decode";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css'
 import axios from 'axios'
@@ -14,6 +15,7 @@ function App() {
   useEffect(() => {
     handleUser();
   }, []);
+
 
   const handleUser = async () => {
     //check jwt for user data if so set user
@@ -34,6 +36,9 @@ function App() {
         if (res.status === 200 && res.data.user) {
           setUser(res.data.user);
           setMessage('User set');
+        } else {
+          //logging out
+          setUser(null)
         }
       } catch (error) {
         setMessage(`Error fetching home: ${error}`)
@@ -45,7 +50,7 @@ function App() {
     <div>
       {user ?( <div>
           <h1>Hello {user.username}</h1>
-          <Logout handleUser={handleUser} />
+          <Logout handleUser={handleUser}  />
           {/* Include other protected components like AuthReq */}
           <AuthReq />
         </div>)

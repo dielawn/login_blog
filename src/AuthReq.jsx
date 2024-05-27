@@ -2,10 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import config from "./config";
+import { convertUnixTime, getHrMin } from "../utils";
 
 export const AuthReq = () => {
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
+    const [iat, setIat] = useState(null)
+    const [expTime, setExpTime] = useState(null)
+
+    useEffect(() => {
+        if (data && data.user) {
+            setExpTime(getHrMin(data.user.exp))
+            setIat(convertUnixTime(data.user.iat))
+        }
+       }, [data])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,6 +36,7 @@ export const AuthReq = () => {
                     }
                 });
                 setMessage('Token set')
+                console.log('Response Data:', res.data); 
                 setData(res.data);
             }  catch (error) {
                 if (error.response) {
@@ -43,11 +54,18 @@ export const AuthReq = () => {
 
         fetchData();
     }, []);
+
+
     return (
         <div>
             <h2>AuthReq</h2>
         {data ? (
-            <div>{JSON.stringify(data)}</div>
+            <div>
+                <h3><strong>{data.user.username}</strong> is logged in.</h3>
+                <p>ID: {data.user.id}</p>
+                <p>Session initiated: {iat}</p>
+                <p>User will be logged out at: {expTime}</p>
+            </div>
         ) : (
             <p>{message}</p>
         )}
