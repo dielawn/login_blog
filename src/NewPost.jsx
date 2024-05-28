@@ -10,20 +10,19 @@ export const NewPost = ({ data, updateUser }) => {
     const handleNewPost = async (e) => {
         e.preventDefault();
         try {
-            
+            console.log(data.user.id)
             const newPost = {
                 title,
                 author: data.user.id,
                 content,
             }
             const res = await axios.post(`${config.apiBaseUrl}/posts`, newPost );
-            console.log(res)
             if (res.status === 201) {
                 //push to user.posts
-                
                 const createdPost = res.data.post;
                 const updatedUser = {...data.user };
-                updatedUser.posts.push(createdPost.id);
+                console.log(updatedUser)
+                updatedUser.posts.push(createdPost._id);
                 updateUser(updatedUser);
                 setMessage('Success posting')
                 setTitle('');

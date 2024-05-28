@@ -10,7 +10,7 @@ export const Register = () => {
     const handleRegistration = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${config.apiBaseUrl}/register`, { username, password, admin: false });
+            const res = await axios.post(`${config.apiBaseUrl}/register`, { username, password, admin: false, posts: [] });
             if (res.status === 201) {
                 setMessage('Registration successful')
             }
