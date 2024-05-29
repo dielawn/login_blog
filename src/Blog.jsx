@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BlogPost } from "./BlogPost";
 import axios from "axios";
+import config from "./config";
 
 export const Blog = ({ data }) => {
 const [posts, setPosts] = useState([]);

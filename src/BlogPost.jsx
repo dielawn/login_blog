@@ -16,7 +16,7 @@ export const BlogPost = ({ title, author, content, comments, createdAt }) => {
                 </div>
                 })}
             </div>
-            <p>{new Date(createdAt).tolocaleString()}</p>
+            <p>{new Date(createdAt).toLocaleString()}</p>
         </div>
     )
 }; 

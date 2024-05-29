@@ -1,4 +1,4 @@
-import React,  { useState } from "react";
+import React,  { useEffect, useState } from "react";
 import axios from "axios";
 import config from "./config";
 
@@ -18,12 +18,7 @@ export const NewPost = ({ data, updateUser }) => {
             }
             const res = await axios.post(`${config.apiBaseUrl}/posts`, newPost );
             if (res.status === 201) {
-                //push to user.posts
-                const createdPost = res.data.post;
-                const updatedUser = {...data.user };
-                console.log(updatedUser)
-                updatedUser.posts.push(createdPost._id);
-                updateUser(updatedUser);
+                addPostToUser(res.data.post._id )               
                 setMessage('Success posting')
                 setTitle('');
                 setContent('')
@@ -34,6 +29,30 @@ export const NewPost = ({ data, updateUser }) => {
         }
     }
 
+   
+        const addPostToUser = async (postId) => {
+            try {
+                
+                const token = localStorage.getItem('token');
+                const res = await axios.post(`${config.apiBaseUrl}/posts`,
+                    { postId },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    } 
+                );
+
+                if (res.status === 200) {
+                    setMessage('Post added to user successfully')
+                }
+            } catch (error) {
+                console.error(error)
+                setMessage(`Error: ${error.response?.data?.message || error.message}`);
+            }
+        }
+
+   
     return (
         <div>
              <fieldset><legend>Blog Post</legend>
