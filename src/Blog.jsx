@@ -15,10 +15,9 @@ export const Blog = ({ data }) => {
                     axios.get(`${config.apiBaseUrl}/posts/${postId}`)
                 );
                 const postResponses = await Promise.all(postPromises);
-                const postsData = postResponses.map(response => {
-                    if(response.data.post !== null) {
-                        response.data.post
-                    }});
+                const postsData = postResponses
+                    .map(response => response.data.post)
+                    .filter(post => post !== null);
                 setPosts(postsData)
             } catch (error) {
                 setMessage(`Error: ${error.response?.data?.message || error.message}`);

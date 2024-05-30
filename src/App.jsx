@@ -20,6 +20,7 @@ function App() {
   }, []);
 
 
+
   const handleUser = async () => {
     //check jwt for user data if so set user
     const token = localStorage.getItem('token');
