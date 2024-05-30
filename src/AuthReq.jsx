@@ -6,7 +6,7 @@ import { convertUnixTime, getHrMin } from "../utils";
 import { Blog } from './Blog';
 import { NewPost } from "./NewPost";
 
-export const AuthReq = ({ updateUser }) => {
+export const AuthReq = ({ updateUserPosts }) => {
     const [data, setData] = useState(null);
     const [message, setMessage] = useState('');
     const [iat, setIat] = useState(null)
@@ -70,7 +70,7 @@ export const AuthReq = ({ updateUser }) => {
                 <p>User will be logged out at: {expTime}</p>
                 {data.user.posts && <Blog data={data}/>}
                 <div>
-                   <NewPost updateUser={updateUser} data={data}/>
+                   <NewPost data={data} updateUserPosts={updateUserPosts}/>
                 </div>
             </div>
 

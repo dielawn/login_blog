@@ -49,13 +49,20 @@ function App() {
     }
   }
 
+  const updateUserPosts = (newPostId) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      posts: [...prevUser.posts, newPostId]
+    }))
+  }
+
   return (
     <div>
       {user ?( <div>
           <h1>Hello {user.username}</h1>
           <Logout handleUser={handleUser}  />
           {/* Include other protected components like AuthReq */}
-          <AuthReq updateUser={updateUser}/>
+          <AuthReq updateUserPosts={updateUserPosts}/>
         </div>)
       : 
      ( <div>

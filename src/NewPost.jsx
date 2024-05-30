@@ -2,7 +2,7 @@ import React,  { useEffect, useState } from "react";
 import axios from "axios";
 import config from "./config";
 
-export const NewPost = ({ data, updateUser }) => {
+export const NewPost = ({ data, updateUserPosts }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [message, setMessage] = useState('');
@@ -16,9 +16,23 @@ export const NewPost = ({ data, updateUser }) => {
                 author: data.user.id,
                 content,
             }
-            const res = await axios.post(`${config.apiBaseUrl}/posts`, newPost );
+            const token = localStorage.getItem('token');
+            const res = await axios.post(`${config.apiBaseUrl}/posts`,
+                newPost,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                } 
+            );
+            
             if (res.status === 201) {
-                addPostToUser(res.data.post._id )               
+                //adds post to database user.posts
+                const postId = res.data.post._id
+                console.log(postId)
+                await addPostToUser(postId)   
+                // updates user with new db post data      
+                updateUserPosts(postId)      
                 setMessage('Success posting')
                 setTitle('');
                 setContent('')
@@ -31,10 +45,9 @@ export const NewPost = ({ data, updateUser }) => {
 
    
         const addPostToUser = async (postId) => {
-            try {
-                
+            try {                
                 const token = localStorage.getItem('token');
-                const res = await axios.post(`${config.apiBaseUrl}/posts`,
+                const res = await axios.post(`${config.apiBaseUrl}/user/posts`,
                     { postId },
                     {
                         headers: {

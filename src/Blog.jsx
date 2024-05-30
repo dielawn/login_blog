@@ -4,8 +4,9 @@ import axios from "axios";
 import config from "./config";
 
 export const Blog = ({ data }) => {
-const [posts, setPosts] = useState([]);
-const [message, setMessage] = useState('');
+
+    const [posts, setPosts] = useState([]);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -14,7 +15,10 @@ const [message, setMessage] = useState('');
                     axios.get(`${config.apiBaseUrl}/posts/${postId}`)
                 );
                 const postResponses = await Promise.all(postPromises);
-                const postsData = postResponses.map(response => response.data.post);
+                const postsData = postResponses.map(response => {
+                    if(response.data.post !== null) {
+                        response.data.post
+                    }});
                 setPosts(postsData)
             } catch (error) {
                 setMessage(`Error: ${error.response?.data?.message || error.message}`);
