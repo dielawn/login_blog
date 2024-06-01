@@ -9,7 +9,7 @@ export const BlogPost = ({ title, author, content, comments, createdAt, postId, 
         try {
             e.preventDefault();
             const token = localStorage.getItem('token');
-            const res = await axios.delete(`${config.apiBaseUrl}/posts/${postId}`, 
+            const res = await axios.delete(`${config.apiBaseUrl}/delete/${postId}`, 
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

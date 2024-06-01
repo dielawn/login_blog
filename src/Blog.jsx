@@ -3,7 +3,7 @@ import { BlogPost } from "./BlogPost";
 import axios from "axios";
 import config from "./config";
 
-export const Blog = ({ data }) => {
+export const Blog = ({ handleDelete }) => {
 
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
@@ -11,24 +11,26 @@ export const Blog = ({ data }) => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const postPromises = data.user.posts.map(postId =>
-                    axios.get(`${config.apiBaseUrl}/posts/${postId}`)
-                );
-                const postResponses = await Promise.all(postPromises);
-                const postsData = postResponses
-                    .map(response => response.data.post)
-                    .filter(post => post !== null);
-                setPosts(postsData)
-                console.log(postsData)
+                const res = await axios.get(`${config.apiBaseUrl}/posts`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                if (res.status === 200) {
+                    setPosts(res.data.posts)
+                    setMessage('Post data set')
+                } else {
+                    setMessage('No posts found')
+                }
+                
+                
             } catch (error) {
                 setMessage(`Error: ${error.response?.data?.message || error.message}`);
             }
         };
 
-        if (data.user && data.user.posts) {
-            fetchPosts();
-        }
-    }, [data.user])
+        fetchPosts();      
+    }, [])
 
     const removePost = (postId) => {
         setPosts(posts.filter(post => post._id !== postId));
@@ -42,7 +44,7 @@ return (
                 <BlogPost
                     key={post._id}
                     title={post.title}
-                    author={post.author.username} // Assuming post.author is populated with user data
+                    author={post.author.username} 
                     content={post.content}
                     comments={post.comments}
                     createdAt={post.createdAt}
