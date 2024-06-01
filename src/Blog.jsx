@@ -3,7 +3,7 @@ import { BlogPost } from "./BlogPost";
 import axios from "axios";
 import config from "./config";
 
-export const Blog = ({ handleDelete }) => {
+export const Blog = ({ userId }) => {
 
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
@@ -50,6 +50,7 @@ return (
                     createdAt={post.createdAt}
                     postId={post._id}
                     onDelete={removePost}
+                    userId={userId}
                 />
             ))
         ) : (

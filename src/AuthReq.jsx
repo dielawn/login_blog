@@ -12,6 +12,7 @@ export const AuthReq = ({ updateUserPosts }) => {
     const [iat, setIat] = useState(null)
     const [expTime, setExpTime] = useState(null)
 
+
     
     useEffect(() => {
         if (data && data.user) {
@@ -64,14 +65,13 @@ export const AuthReq = ({ updateUserPosts }) => {
             <h2>AuthReq</h2>
         {data ? (
             <div>
-                <h3><strong>{data.user.username}</strong> is logged in.</h3>
-                <p>ID: {data.user.id}</p>
-                <p>Session initiated: {iat}</p>
-                <p>User will be logged out at: {expTime}</p>
-                {data.user.posts && <Blog data={data}/>}
                 <div>
                    <NewPost data={data} updateUserPosts={updateUserPosts}/>
                 </div>
+                <h3><strong>{data.user.username}</strong> is logged in.</h3>
+                <p>USER ID: {data.user.id} to be logged out at: {expTime}</p>
+                {data.user.posts && <Blog data={data} userId={data.user.id}/>}
+                
             </div>
 
            
