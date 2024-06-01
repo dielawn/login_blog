@@ -19,6 +19,7 @@ export const Blog = ({ data }) => {
                     .map(response => response.data.post)
                     .filter(post => post !== null);
                 setPosts(postsData)
+                console.log(postsData)
             } catch (error) {
                 setMessage(`Error: ${error.response?.data?.message || error.message}`);
             }
@@ -28,8 +29,12 @@ export const Blog = ({ data }) => {
             fetchPosts();
         }
     }, [data.user])
+
+    const removePost = (postId) => {
+        setPosts(posts.filter(post => post._id !== postId));
+    }
     
-console.log(data.user)
+
 return (
     <div>
         {posts.length > 0 ? (
@@ -41,6 +46,8 @@ return (
                     content={post.content}
                     comments={post.comments}
                     createdAt={post.createdAt}
+                    postId={post._id}
+                    onDelete={removePost}
                 />
             ))
         ) : (
