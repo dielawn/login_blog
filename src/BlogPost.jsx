@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import config from "./config";
+import Comment from "../Comments";
 
 export const BlogPost = ({ title, author, content, comments, createdAt, postId, onDelete, userId }) => {
     const [message, setMessage] = useState('');
@@ -63,7 +64,7 @@ export const BlogPost = ({ title, author, content, comments, createdAt, postId, 
         }
     } 
 
-    const handleComment = async (e) => {
+    const addComment = async (e) => {
         try {
             e.preventDefault();
             const postComment = {title, author: userId, content: newComment}
@@ -74,6 +75,8 @@ export const BlogPost = ({ title, author, content, comments, createdAt, postId, 
             });
             if (res.status === 201) {
                 setMessage('Successfully added comment')
+                setIsCommentsVis(false)
+                setNewComment('')
             } else {
                 setMessage(`${res.status} ${res.message}`)
             }
@@ -82,9 +85,15 @@ export const BlogPost = ({ title, author, content, comments, createdAt, postId, 
         } catch (error) {
             setMessage(`Error: ${error.response?.data?.message || error.message}`);
         }
+    };
 
+    const handleComment = async () => {
 
     }
+
+    useEffect(() => {
+        console.log(comments)
+    }, [])
 
     return (
         <div>
@@ -113,7 +122,7 @@ export const BlogPost = ({ title, author, content, comments, createdAt, postId, 
                     <button onClick={() => setIsAddComment(!isAddComment)}>Open add Comment</button>
 
                     {isAddComment && (
-                        <form onSubmit={handleComment}>
+                        <form onSubmit={addComment}>
                             <textarea
                                 placeholder="Comment"
                                 value={newComment}
@@ -128,11 +137,8 @@ export const BlogPost = ({ title, author, content, comments, createdAt, postId, 
                     </button>
                     {isCommentsVis && (
                         <div>
-                            {comments.map((comment, index) => (
-                                <div key={index}>                                   
-                                    <p>{comment.author}</p>
-                                    <p>{comment.content}</p>
-                                </div>
+                            {comments.map((commentId) => (
+                                <Comment commentId={commentId} key={commentId}/>
                             ))}
                         </div>
                     )}
